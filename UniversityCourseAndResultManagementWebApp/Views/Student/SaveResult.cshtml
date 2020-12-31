@@ -1,0 +1,143 @@
+﻿@using UniversityCourseAndResultManagementWebApp.Models
+
+@{
+    Layout = null;
+    List<Student> students = ViewBag.RegistrationNos;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title> Save Student Result </title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <style>
+        input.error {
+            border-color: red;
+        }
+
+        label.error {
+            color: red;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row" style="padding-top: 50px;">
+        <div class="col-md-6">
+            <form id="SaveStudentResult" method="POST">
+                <fieldset>
+                    <legend> Save Student Result </legend>
+                    <div class="form-group ">
+                        <label for="Id">Registration No</label>
+                        <select name="Id" id="Id" class="form-control">
+                            <option value="">--Select Registration No--</option>
+                            @{
+                                foreach (Student student in students)
+                                {
+                                    <option value="@student.Id">@student.RegistrationNo</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group ">
+                        <label for="Name">Name</label>
+                        <input type="text" class="form-control" name="Name" id="Name" placeholder="Name" disabled>
+                    </div>
+                    <div class="form-group ">
+                        <label for="Email">Email</label>
+                        <input type="text" class="form-control" name="Email" id="Email" placeholder="Email" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="DepartmentName">Department Name</label>
+                        <input type="text" class="form-control" name="DepartmentName" id="DepartmentName" placeholder="Department Name" disabled>
+                    </div>
+                    <div class="form-group ">
+                        <label for="CourseId">Select Course</label>
+                        <select name="CourseId" id="CourseId" class="form-control">
+                            <option value="">--Select Course--</option>
+                        </select>
+                    </div>
+                    <div class="form-group ">
+                        <label for="Grade">Select Grade letter</label>
+                        <select name="Grade" id="Grade" class="form-control">
+                            <option value="">--Select Grade letter--</option>
+                            <option value="A+">A+</option>
+                            <option value="A">A</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B">B</option>
+                            <option value="B-">B-</option>
+                            <option value="C+">C+</option>
+                            <option value="C">C</option>
+                            <option value="C-">C-</option>
+                            <option value="D+">D+</option>
+                            <option value="D">D</option>
+                            <option value="D-">D-</option>
+                            <option value="F">F</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="submit">Save</button>
+                    <label id="message">@ViewBag.Message </label>
+                </fieldset>
+            </form>
+            <br/>
+            <br/>
+            <h4>@Html.ActionLink("Back To Home", "Index", "Home")</h4>
+        </div>
+    </div>
+</div>
+    <script src="~/Scripts/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script>
+
+        $("#SaveStudentResult").validate({
+                rules: {
+                    Id: "required",
+                    Grade: "required",
+                    CourseId: "required"
+                },
+                messages: {
+                    Id: " Please, Select a Registration No. !!!",
+                    Grade: " Please, Select a Grade !!!",
+                    CourseId: " Please, Select a Course !!!"
+
+                }
+            });
+        $("#Id").change(function () {
+                $("#message").hide();
+                var regId = $("#Id").val();
+                $("#CourseId").empty();
+                $("#CourseId").append('<option value="">--Select Course--</option>');
+                var input = { id: regId };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetCoursesByStudentId", "Student")',
+                    //url: "CourseAssign/GetTeachersAndCoursesByDepartmentId",
+                    data: JSON.stringify(input),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        $.each(response, function(key, value) {
+                            $("#CourseId").append('<option value="' + value.CourseId + '">' + value.CourseName + '</option>');
+                        });
+
+                    }
+                });
+                    $.ajax({
+                        type: "POST",
+                        url: "/Student/GetStudentInfo",
+                        dataType: "Json",
+                        data: { 'id': regId },
+                        success: function (result) {
+                            $("#Name").val(result.Name);
+                            $("#Email").val(result.Email);
+                            $("#DepartmentName").val(result.DepartmentName);
+                        }
+                    });
+              
+            });
+    </script>
+</body>
+</html>

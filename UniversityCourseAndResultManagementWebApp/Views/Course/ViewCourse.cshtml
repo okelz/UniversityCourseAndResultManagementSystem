@@ -1,0 +1,111 @@
+﻿@using UniversityCourseAndResultManagementWebApp.Models
+
+@{
+    Layout = null;
+    List<Department> departments = ViewBag.Departments;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>View Course Statics </title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/css/jquery.dataTables.css" rel="stylesheet"/>
+    <style>
+        textarea.error {
+            border-color: red;
+        }
+        /*#tableBody.odd {
+            color: white;
+            background-color: blue;
+        }
+        #tableBody.even {
+            color: black;
+            background-color: white;
+        }*/
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row" style="padding-top: 50px;">
+            <form id="CourseView" method="POST">
+                <fieldset>
+                    <legend>View Course Statics </legend>
+                    <div class="col-md-5">
+                        <label for="DepartmentId">Department</label>
+                        <select name="DepartmentId" id="DepartmentId" class="form-control">
+                            <option value="">--Select Department--</option>
+                            @{
+                                foreach (Department department in departments)
+                                {
+                                    <option value="@department.Id">@department.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <table id="CourseViewTable" class="table table-bordered table-hover table-striped">
+                        <thead>
+                        <tr>
+                       
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Semester</th>
+                            <th>Assign To</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </fieldset>
+            </form>
+            <br />
+            <br />
+            <h4>@Html.ActionLink("Back To Home", "Index", "Home")</h4>
+            </div>
+     
+    </div>
+    <script src="~/Scripts/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script>
+        $(function () {
+            $("#CourseView").validate({
+                rules: {
+                    DepartmentId: "required"
+                },
+                messages: {
+                    DepartmentId: " Please, Select a Department !!!"
+                }
+            });
+            var table = $("#CourseViewTable").DataTable();
+            $("#DepartmentId").change(function () {
+                var deptId = $("#DepartmentId").val();
+                table.clear().draw(false);
+                var input = { departmentId: deptId };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetCourseDetailes", "Course")',
+                    //url: "Department/GetStudentsByDepartmentId",
+                    data: JSON.stringify(input),
+                    contentType: 'application/json',
+                    success: function (response) {
+                        $.each(response, function (key, value) {
+                            table.row.add([
+                                value.CourseCode,
+                                value.CourseName,
+                                value.SemesterName,
+                                value.TeacherName
+
+                            ]).draw(false);
+                        });
+
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

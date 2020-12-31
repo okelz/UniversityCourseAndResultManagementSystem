@@ -1,0 +1,133 @@
+﻿@using UniversityCourseAndResultManagementWebApp.Models
+
+@{
+    Layout = null;
+    List<Department> departments = ViewBag.Departments;
+    List<Semester> semesters = ViewBag.Semesters;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Save Course </title>
+    <style>
+        input.error {
+            border-color: red;
+        }
+        textarea.error {
+            border-color: red;
+        }
+
+         label.error {
+             
+             color: red;
+             font-style: italic;
+         }
+    </style>
+
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <div class="row" style="padding-top: 50px;">
+            <div class="col-md-6">
+                <form id="SaveCourse" method="POST">
+                    <fieldset>
+                        <legend>Save Course </legend>
+                        <div class="form-group ">
+                            <label for="Code">Code</label>
+                            <input type="text" class="form-control" name="Code" id="Code" placeholder="Code">
+                        </div>
+                        <div class="form-group ">
+                            <label for="Name">Name</label>
+                            <input type="text" class="form-control" name="Name" id="Name" placeholder="Name">
+                        </div>
+                        <div class="form-group ">
+                            <label for="Credit">Credit</label>
+                            <input type="number" class="form-control" name="Credit" id="Credit" placeholder="Credit">
+                        </div>
+                        <div class="form-group">
+                            <label for="Description">Description</label>
+                            <input type="text" class="form-control" name="Description" id="Description" placeholder="Description">
+                        </div>
+                        <div class="form-group ">
+                            <label for="DepartmentId">Department</label>
+                            <select name="DepartmentId" id="DepartmentId" class="form-control">
+                                <option value="">--Select Department--</option>
+                                @{
+                                    foreach (Department department in departments)
+                                    {
+                                        <option value="@department.Id">@department.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group ">
+                            <label for="SemesterId">Semester</label>
+                            <select name="SemesterId" id="SemesterId" class="form-control">
+                                <option value="">--Select Semester--</option>
+                                @{
+                                    foreach (Semester semester in semesters)
+                                    {
+                                        <option value="@semester.Id">@semester.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="submit">Save</button>
+                        <label id="message">@ViewBag.Message </label>
+                    </fieldset>
+                </form>
+                <br />
+                <br />
+                <h4>@Html.ActionLink("Back To Home", "Index", "Home")</h4>
+            </div>
+        </div>
+    
+    </div>
+    <script src="~/Scripts/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script>
+        $(function () {
+
+            $("#SaveCourse").validate({
+                rules: {
+                    Code: {
+                        required: true,
+                        minlength: 5
+                    },
+                    Name: "required",
+                    Credit: "required",
+                    Description: "required",
+                    DepartmentId: "required",
+                    SemesterId: "required"
+
+
+                },
+                messages: {
+                    Code: {
+                        required: " Please, Enter a Course Code !!!",
+                        minlength: " Code must be atleast 5 Character long !!!"
+                    },
+                    Name: " Please, Enter a Course Name !!!",
+                    Description: " Please, Enter Course Description !!!",
+                    Credit: " Please, Enter Course Credit !!!",
+                    DepartmentId: " Please, Select a Department !!!",
+                    SemesterId: " Please, Select a Semester !!!"
+                }
+
+            });
+       
+            $("#DepartmentId").change(function() {
+                $("#message").hide();
+            });
+
+        });
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,45 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title> Unassign All Courses </title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+</head>
+<body>
+<div class="container">
+    <div class="row" style="padding-top: 50px;">
+        <div class="col-md-6">
+            <form method="POST" onsubmit="return submitForm();">
+                <fieldset>
+                    <legend> Unassign All Courses </legend>
+                    <div class="form-group ">
+                        <button type="submit" class="btn btn-primary" id="Register" onclick="Confirm()"> Unassign Courses</button>
+                    </div>
+                    <label id="message">@ViewBag.Message </label>
+                </fieldset>
+                <h4>@Html.ActionLink("Back To Home", "Index", "Home")</h4>
+            </form>
+        </div>
+    </div>
+</div>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        function Confirm() {
+            var input = $("<input />");
+            input.attr("type", "hidden").attr("name", "confirmValue");
+            if (confirm("Do you want to Unassign all Courses?")) {
+                input.val("Yes");
+            } else {
+                input.val("No");
+            }
+            $("form")[0].appendChild(input[0]);
+        }
+    </script>
+</body>
+</html>

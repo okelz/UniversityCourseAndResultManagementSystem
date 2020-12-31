@@ -1,0 +1,63 @@
+﻿@using UniversityCourseAndResultManagementWebApp.Models
+
+@{
+    Layout = null;
+    List<Department> departments = ViewBag.Departments;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>View All Departments </title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet"/>
+    <link href="~/Content/css/jquery.dataTables.css" rel="stylesheet"/>
+    <style>
+  
+    </style>
+ 
+</head>
+<body>
+<div class="container">
+    <div class="row" style="padding-top: 50px;">
+            <fieldset>
+                <legend>View All Departments</legend>
+                    <table id="DepartmentViewTable" class="table table-bordered table-hover table-striped">
+                        <thead>
+                        <tr>
+                            <th>SL</th>
+                            <th>Code</th>
+                            <th>Name</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                        @{
+                            int c =1;
+                            foreach (Department department in departments)
+                            {
+                                <tr>
+                                    <td>@c</td>
+                                    <td>@department.Code</td>
+                                    <td>@department.Name</td>
+                                </tr>
+                                c++;
+                            }
+                        }
+                    </table>
+            </fieldset>
+        <br />
+        <br />
+        <h4>@Html.ActionLink("Back To Home", "Index", "Home")</h4>
+    </div>
+</div>
+  
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#DepartmentViewTable").DataTable();
+    });​
+</script>
+</body>
+</html>

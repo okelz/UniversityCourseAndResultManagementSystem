@@ -1,0 +1,63 @@
+﻿@using System
+@using System.Security.Cryptography
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - University Management System</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("University Management System", "Index", "Home", null, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+
+
+
+                    @*<li> Menu
+                        <ul>
+                            <li>@Html.ActionLink("Save Department", "Save", "Department")</li>
+                            <li>@Html.ActionLink("View All Departments", "ViewDepartments", "Department")</li>
+                            <li>@Html.ActionLink("Save Course", "Save", "Course")</li>
+                            <li>@Html.ActionLink("Save Teacher", "Save", "Teacher")</li>
+                            <li>@Html.ActionLink("Course Assign to Teacher", "Assign", "Course")</li>
+                            <li>@Html.ActionLink("View Course Statics", "ViewCourse", "Course")</li>
+                            <li>@Html.ActionLink("Register Student ", "Register", "Student")</li>
+
+                        </ul>
+</li>*@
+
+             
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content" style="text-align: center">
+        @RenderBody()
+        <hr />
+        <footer>
+            <h4>&copy; @DateTime.Now.Year - By Md. Joynal Alam</h4>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

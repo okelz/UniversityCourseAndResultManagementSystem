@@ -1,0 +1,175 @@
+﻿@using UniversityCourseAndResultManagementWebApp.Models
+
+@{
+    Layout = null;
+    List<Student> students = ViewBag.RegistrationNos;
+  
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Enroll In a Course</title>
+    <style>
+        input.error {
+            border-color: red;
+        }
+
+        label.error {
+            color: red;
+            font-style: italic;
+        }
+    </style>
+    <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+
+</head>
+<body>
+<
+<div class="container">
+    <div class="row" style="padding-top: 50px;">
+        <div class="col-md-6">
+            <form id="EnrollCourse" method="POST">
+                <fieldset>
+                    <legend>Enroll In a Course</legend>
+                    <div class="form-group ">
+                        <label for="Id">Registration No</label>
+                        <select name="Id" id="Id" class="form-control">
+                            <option value="">--Select Registration No--</option>
+                            @{
+                                foreach (Student student in students)
+                                {
+                                    <option value="@student.Id">@student.RegistrationNo</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group ">
+                        <label for="Name">Name</label>
+                        <input type="text" class="form-control" name="Name" id="Name" placeholder="Name" disabled>
+                    </div>
+                    <div class="form-group ">
+                        <label for="Email">Email</label>
+                        <input type="text" class="form-control" name="Email" id="Email" placeholder="Email" disabled>
+                    </div>
+                    @*@Html.HiddenFor(m => m.DepartmentId, new { id = "DepartmentId", value = aStudent.DepartmentId })*@
+                    @*@Html.HiddenFor<>("DepartmentId", new { id = "DepartmentId", value = aStudent.DepartmentId });*@
+                    @*@Html.HiddenFor(m => m.StudentID, new { Value = aStudent.DepartmentId })*@
+                    @*@{Html.Hidden("DepartmentId", students.DepartmentId )}*@
+                    <div class="form-group">
+                        <label for="DepartmentName">Department Name</label>
+                        <input type="text" class="form-control" name="DepartmentName" id="DepartmentName" placeholder="Department Name" disabled>
+                    </div>
+                
+                    <div class="form-group ">
+                        <label for="CourseId">Select Course</label>
+                        <select name="CourseId" id="CourseId" class="form-control">
+                            <option value="">--Select Course--</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Date">Date</label>
+                        <input type="text" class="form-control" name="Date" id="Date" placeholder="">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="submit">Save</button>
+                    <label id="message">@ViewBag.Message </label>
+                </fieldset>
+            </form>
+            <br/>
+            <br/>
+            <h4>@Html.ActionLink("Back To Home", "Index", "Home")</h4>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script> 
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+    $("#EnrollCourse").validate({
+                rules: {
+                    Id: "required",
+                    Date: "required",
+                    CourseId: "required"
+                },
+                messages: {
+                    Id: " Please, Select a Registration No. !!!",
+                    Date: " Please, Select Date !!!",
+                    CourseId: " Please, Select a Course !!!"
+
+                }
+    });
+        $("#Id").change(function () {
+                $("#message").hide();
+                var regId = $("#Id").val();
+                //var dept = $("#DepartmentId").val();
+                //alert(dept);
+                $("#CourseId").empty();
+                $("#CourseId").append('<option value="">--Select Course--</option>');
+                var input = { id: regId };
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetCoursesByRegId", "Student")',
+                    //url: "CourseAssign/GetTeachersAndCoursesByDepartmentId",
+                    data: JSON.stringify(input),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        $.each(response, function(key, value) {
+                            $("#CourseId").append('<option value="' + value.CourseId + '">' + value.CourseName + '</option>');
+                        });
+
+                    }
+                });
+                    $.ajax({
+                        type: "POST",
+                        url: "/Student/GetStudentInfoByRegNo",
+                        dataType: "Json",
+                        data: { 'id': regId },
+                        success: function (result) {
+                            $("#Name").val(result.Name);
+                            $("#Email").val(result.Email);
+                            $("#DepartmentName").val(result.DepartmentName);
+                       
+                        }
+                    });
+                   
+
+        });
+     
+    var dateNewFormat, today = new Date();
+
+    dateNewFormat = today.getFullYear() + '/';
+    if (today.getMonth().length === 2) {
+
+        dateNewFormat += (today.getMonth() + 1);
+    } else {
+        dateNewFormat += '0' + (today.getMonth() + 1);
+    }
+
+    var onlyDate = today.getDate();
+    if (onlyDate.toString().length === 2) {
+
+        dateNewFormat += "/" + onlyDate;
+    } else {
+        dateNewFormat += '/0' + onlyDate;
+    }
+    $('#Date').val(dateNewFormat);
+
+    $("#Date").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'yy/mm/dd',
+        minDate: "-30Y",
+        maxDate: "+30Y",
+        yearRange: "1990:2200"
+
+    });
+    });
+</script>
+</body>
+</html>

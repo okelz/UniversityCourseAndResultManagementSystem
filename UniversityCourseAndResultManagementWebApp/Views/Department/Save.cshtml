@@ -1,0 +1,78 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Save Department</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet"/>
+    <style>
+        input.error {
+            border-color: red;
+        }
+        label.error {
+            color: red;
+            font-style: italic;
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <div class="row" style="padding-top: 50px;">
+        <div class="col-md-6">
+            <form id="SaveDepartment" method="POST">
+                <fieldset>
+                    <legend>Save Department </legend>
+                    <div class="form-group ">
+                        <label for="Code">Code</label>
+                        <input type="text" class="form-control" name="Code" id="Code" placeholder="Code">
+                    </div>
+                    <div class="form-group ">
+                        <label for="Name">Name</label>
+                        <input type="text" class="form-control" name="Name" id="Name" placeholder="Name">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="submit">Save</button>
+                    <label id="message">@ViewBag.Message </label>
+                </fieldset>
+            </form>
+            <br/>
+            <br/>
+            <h4>@Html.ActionLink("Back To Home", "Index", "Home")</h4>
+        </div>
+    </div>
+</div>
+    <script src="~/Scripts/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script>
+        $(function () {
+            $("#message").hide(7000);
+            $("#SaveDepartment").validate({
+                rules: {
+                    Code: {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 7
+
+                    },
+                    Name: "required"
+                },
+                messages: {
+                    Code: {
+                        required: " Please, Enter a Course Code !!!",
+                        minlength: " Code must be atleast 2 Character long !!!",
+                        maxlength: " Code must be atmost 7 Character long !!!",
+                    },
+                    Name: " Please, Enter a Department Name !!!"
+                }
+            });
+
+        });
+
+    </script>
+</body>
+</html>
